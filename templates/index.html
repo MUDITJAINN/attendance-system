@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Attendance System</title>
+</head>
+<body>
+    <div>
+        <h1>Face Attendance System</h1>
+        <video id="video" width="640" height="480" autoplay></video>
+        <button onclick="startRecognition()">Start Face Recognition</button>
+        <div id="status">Status: Ready</div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+
+        // Access the webcam
+        async function startVideo() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+        }
+
+        // Start face recognition process
+        async function startRecognition() {
+    const status = document.getElementById('status');
+    status.innerText = "Status: Recognizing face...";
+
+    // Correct canvas setup
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const imageData = canvas.toDataURL('image/jpeg');
+
+    console.log('Sending image data for recognition...');
+
+    const response = await fetch('/recognize_face', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ image: imageData })
+    });
+
+    const data = await response.json();
+    console.log('Received response:', data);
+
+    if (data.status === 'success') {
+        status.innerText = `Status: ${data.message}`;
+    } else {
+        status.innerText = `Status: ${data.message}`;
+    }
+}
+
+
+        // Start video on page load
+        window.onload = startVideo;
+    </script>
+</body>
+</html>
