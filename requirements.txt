@@ -2,3 +2,5 @@ Flask
 opencv-python
 numpy
 firebase-admin
+dlib
+face-recognition
