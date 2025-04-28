@@ -3,5 +3,3 @@ opencv-python
 numpy
 face_recognition
 firebase-admin
-pycryptodome
-pillow
